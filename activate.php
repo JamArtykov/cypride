@@ -50,6 +50,8 @@ if(mysqli_affected_rows($link) == 1){
     echo '<div class="alert alert-success">Your account has been activated.</div>';
     echo '<a href="index.php" type="button" class="btn-lg btn-sucess">Log in<a/>';
     
+    echo '<div class ="button">Login</div>';
+    
 }else{
     //Show error message
     echo '<div class="alert alert-danger">Your account could not be activated. Please try again later.</div>';
@@ -64,4 +66,11 @@ if(mysqli_affected_rows($link) == 1){
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         </body>
+        <style>
+            .button{
+                margin-top: 20px;
+                color: green;
+                border: 1px solid green;
+            }
+        </style>
 </html>

@@ -5,22 +5,8 @@ if(!isset($_SESSION['user_id'])){
 }
 include('connection.php');
 
-$user_id = $_SESSION['user_id'];
 
-//get username and email
-$sql = "SELECT * FROM users WHERE user_id='$user_id'";
-$result = mysqli_query($link, $sql);
 
-$count = mysqli_num_rows($result);
-
-if($count == 1){
-    $row = mysqli_fetch_array($result, MYSQL_ASSOC); 
-    $username = $row['username'];
-    $email = $row['email']; 
-    $picture = $row['profilepicture'];
-}else{
-    echo "There was an error retrieving the username and email from the database";   
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,19 +16,24 @@ if($count == 1){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="styling.css" rel="stylesheet">
+    <link href="styling.css?v=<?php echo time(); ?>" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
       <style>
-        #container{
-            margin-top:100px;   
+
+          #image_preview{
+              left: 100px;
+          }
+
+        container{
+            margin-top:100px;
         }
 
-        #notePad, #allNotes, #done{
-            display: none;   
+        notePad, #allNotes, #done{
+            display: none;
         }
 
         .buttons{
-            margin-bottom: 20px;   
+            margin-bottom: 20px;
         }
 
         textarea{
@@ -55,11 +46,11 @@ if($count == 1){
             color: #CA3DD9;
             background-color: #FBEFFF;
             padding: 10px;
-              
+
         }
-          
+
           tr{
-             cursor: pointer;    
+             cursor: pointer;
           }
           #previewing{
               max-width: 100%;
@@ -73,7 +64,7 @@ if($count == 1){
           }
           #spinner{
               display: none;
-              position: fixed;
+              position: static;
               top: 0;
               left: 0;
               bottom: 0;
@@ -83,252 +74,223 @@ if($count == 1){
               margin: auto;
               z-index: 1100;
           }
+
+
+
+/*          .profile {*/
+/*  max-width: 800px;*/
+/*  margin: 100px auto;*/
+/*  padding: 20px;*/
+/*              */
+/*}*/
+
+          .profile {
+              max-width: 800px;
+              margin: 100px auto;
+              padding: 20px;
+              background-color: #efefef;
+              border: none;
+              cursor: pointer;
+              transition: all 0.5s;
+
+          }
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-picture {
+  width: 150px;
+  height: 150px;
+  margin-right: 40px;
+}
+
+.user-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.3);
+}
+
+.user-details h1 {
+  font-size: 36px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.user-details p {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.user-details p:first-child {
+  margin-top: 10px;
+}
+
+@media screen and (max-width: 767px) {
+  .user-info {
+    flex-direction: column;
+  }
+  
+  .user-picture {
+    margin: 0 auto;
+    margin-bottom: 20
+}
+
+.user-details {
+text-align: center;
+margin-top: 20px;
+}
+}
       </style>
   </head>
   <body>
-    <!--Navigation Bar-->  
-      <nav role="navigation" class="navbar navbar-custom navbar-fixed-top">
-      
-          <div class="container-fluid">
-            
-              <div class="navbar-header">
-              
-                  <a class="navbar-brand">CYPRIDE</a>
-                  <button type="button" class="navbar-toggle" data-target="#navbarCollapse" data-toggle="collapse">
-                      <span class="sr-only">Toggle navigation</span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                  
-                  </button>
-              </div>
-              <div class="navbar-collapse collapse" id="navbarCollapse">
-                  <ul class="nav navbar-nav">
-                    <li><a href="index.php">Search</a></li>  
-                    <li class="active"><a href="#">Profile</a></li>
-                      <li><a href="mainpageloggedin.php">My Trips</a></li>
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right">
-                      <li><a href="#">
-                            <?php
-                                if(empty($picture)){
-                                    echo "<div class='image_preview'  data-target='#updatepicture' data-toggle='modal'><img class='previewing2' src='profilepicture/noimage.jpg' /></div>";
-                                }else{
-                                    echo "<div class='image_preview' data-target='#updatepicture' data-toggle='modal'><img class='previewing2' src='$picture' /></div>";
-                                }
+    <?php if(isset($_SESSION["user_id"])){
+    include("navigationbarconnected.php");
+}else{
+    include("navigationbarnotconnected.php");
+}
+   
 
-                              ?>
-                          </a>
-                      </li>
-                      <li><a href="#"><b><?php echo $username; ?></b></a></li>
-                    <li><a href="index.php?logout=1">Log out</a></li>
-                  </ul>
-              
-              </div>
-          </div>
-      
-      </nav>
-    
-<!--Container-->
-      <div class="container" id="container">
-          <div class="row">
-              <div class="col-md-offset-3 col-md-6">
+$user_id = $_GET['u'];
 
-                  <h2>General Account Settings:</h2>
-                  <div class="table-responsive">
-                      <table class="table table-hover table-condensed table-bordered">
-                          <tr data-target="#updateusername" data-toggle="modal">
-                              <td>Username</td>
-                              <td><?php echo $username; ?></td>
-                          </tr>
-                          <tr data-target="#updateemail" data-toggle="modal">
-                              <td>Email</td>
-                              <td><?php echo $email ?></td>
-                          </tr>
-                          <tr data-target="#updatepassword" data-toggle="modal">
-                              <td>Password</td>
-                              <td>hidden</td>
-                          </tr>
-                      </table>
-                  
-                  </div>
-              
-              </div>
-          </div>
-      </div>
 
-    <!--Update username-->    
-      <form method="post" id="updateusernameform">
-        <div class="modal" id="updateusername" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" data-dismiss="modal">
-                    &times;
-                  </button>
-                  <h4 id="myModalLabel">
-                    Edit Username: 
-                  </h4>
-              </div>
-              <div class="modal-body">
-                  
-                  <!--update username message from PHP file-->
-                  <div id="updateusernamemessage"></div>
-                  
 
-                  <div class="form-group">
-                      <label for="username" >Username:</label>
-                      <input class="form-control" type="text" name="username" id="username" maxlength="30" value="<?php echo $username; ?>">
-                  </div>
-                  
-              </div>
-              <div class="modal-footer">
-                  <input class="btn green" name="updateusername" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
-          </div>
-      </div>
-      </div>
-      </form>
 
-    <!--Update email-->    
-      <form method="post" id="updateemailform">
-        <div class="modal" id="updateemail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" data-dismiss="modal">
-                    &times;
-                  </button>
-                  <h4 id="myModalLabel">
-                    Enter new email: 
-                  </h4>
-              </div>
-              <div class="modal-body">
-                  
-                  <!--Update email message from PHP file-->
-                  <div id="updateemailmessage"></div>
-                  
+//get user details
+$query = "SELECT * FROM users WHERE user_id = $user_id";
+$result = mysqli_query($link, $query);
+$user = mysqli_fetch_assoc($result);
 
-                  <div class="form-group">
-                      <label for="email" >Email:</label>
-                      <input class="form-control" type="email" name="email" id="email" maxlength="50" value="<?php echo $email ?>">
-                  </div>
-                  
-              </div>
-              <div class="modal-footer">
-                  <input class="btn green" name="updateusername" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
-          </div>
-      </div>
-      </div>
-      </form>
-      
-    <!--Update password-->    
-      <form method="post" id="updatepasswordform">
-        <div class="modal" id="updatepassword" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" data-dismiss="modal">
-                    &times;
-                  </button>
-                  <h4 id="myModalLabel">
-                    Enter Current and New password:
-                  </h4>
-              </div>
-              <div class="modal-body">
-                  
-                  <!--Update password message from PHP file-->
-                  <div id="updatepasswordmessage"></div>
-                  
 
-                  <div class="form-group">
-                      <label for="currentpassword" class="sr-only" >Your Current Password:</label>
-                      <input class="form-control" type="password" name="currentpassword" id="currentpassword" maxlength="30" placeholder="Your Current Password">
-                  </div>
-                  <div class="form-group">
-                      <label for="password" class="sr-only" >Choose a password:</label>
-                      <input class="form-control" type="password" name="password" id="password" maxlength="30" placeholder="Choose a password">
-                  </div>
-                  <div class="form-group">
-                      <label for="password2" class="sr-only" >Confirm password:</label>
-                      <input class="form-control" type="password" name="password2" id="password2" maxlength="30" placeholder="Confirm password">
-                  </div>
-                  
-              </div>
-              <div class="modal-footer">
-                  <input class="btn green" name="updateusername" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
-          </div>
-      </div>
-      </div>
-      </form>
-      
-      <!--Update picture-->    
-      <form method="post" enctype="multipart/form-data" id="updatepictureform">
+
+$picture = $user['profilepicture']; ?>
+    <form method="post" enctype="multipart/form-data" id="updatepictureform">
         <div class="modal" id="updatepicture" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" data-dismiss="modal">
-                    &times;
-                  </button>
-                  <h4 id="myModalLabel">
-                    Upload Picture:
-                  </h4>
-              </div>
-              <div class="modal-body">
-                  
-                  <!--Update picture message from PHP file-->
-                  <div id="updatepicturemessage"></div>
-                  <?php
-                    if(empty($picture)){
-                        echo "<div class='image_preview'><img id='previewing' src='profilepicture/noimage.jpg' /></div>";
-                    }else{
-                        echo "<div class='image_preview'><img id='previewing' src='$picture' /></div>";
-                    }
-    
-                  ?>
-                  <div class="form-inline">
-                      <div class="form-group">
-                        <label for="picture">Select a picture:</label>
-                        <input type="file" name="picture" id="picture">
-                      </div>
-                </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">
+                            &times;
+                        </button>
+                        <h4 id="myModalLabel">
+                            Upload Picture:
+                        </h4>
+                    </div>
+                    <div class="modal-body">
 
-                  
-                  
-              </div>
-              <div class="modal-footer">
-                  <input class="btn green" name="updatepicture" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
-          </div>
+                        <!--Update picture message from PHP file-->
+                        <div id="updatepicturemessage"></div>
+                        <?php
+                        if(empty($picture)){
+                            echo "<div class='image_preview'><img id='previewing' src='profilepicture/noimage.jpg' /></div>";
+                        }else{
+                            echo "<div class='image_preview'><img id='previewing' src='$picture' /></div>";
+                        }
+
+                        ?>
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="picture">Select a picture:</label>
+                                <input type="file" name="picture" id="picture">
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn green" name="updatepicture" type="submit" value="Submit">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+<!--Container-->
+
+
+
+<div class="profile">
+  <?php if(!$user) { ?>
+    <h1><?php echo "User was not found"; ?></h1>
+  <?php } else if ($user_id == $_SESSION["user_id"]) { ?>
+    <div class="user-info">
+      <div class="user-picture">
+        <a href="#" data-target="#updatepicture" data-toggle="modal">
+          <?php
+            if(empty($picture)){
+              echo "<img class='previewing2' src='noimage.jpg' />";
+            } else {
+              echo "<img class='previewing2' src='$picture' />";
+            }
+          ?>
+        </a>
       </div>
+      <div class="user-details">
+        <h1><?php echo $user['first_name'] . ' ' . $user['last_name']; ?></h1>
+        <p>Username: <?php echo $user['username']; ?></p>
+        <p>Email: <?php echo $user['email']; ?></p>
+        <p>Gender: <?php echo $user['gender']; ?></p>
+        <p>Phone Number: <?php echo $user['phonenumber']; ?></p>
+        <p>More Information: <?php echo $user['moreinformation']; ?></p>
+            <?php echo $user["user_id"]; echo '/' .$_SESSION["user_id"];?>
       </div>
-      </form>
+    </div>
+  <?php } else if ($user["user_id"] != $_SESSION["user_id"]) { ?>
+    <div class="user-info">
+      <div class="user-picture">
+        
+          <?php
+            if(empty($picture)){
+              echo "<img class='previewing2' src='noimage.jpg' />";
+            } else {
+              echo "<img class='previewing2' src='$picture' />";
+            }
+          ?>
+        
+      </div>
+      <div class="user-details">
+        <h1><?php echo $user['first_name'] . ' ' . $user['last_name']; ?></h1>
+        <p>Username: <?php echo $user['username']; ?></p>
+        <p>Gender: <?php echo $user['gender']; ?></p>
+      </div>
+    </div>
+  <?php } ?>
+</div>
+
+
+
+
     <!-- Footer-->
-      <div class="footer">
-          <div class="container">
-            
-          </div>
-      </div>
+    <div class="footer" style="background-color: rgba(255,107,1,0.57)">
+
+
+
+        <div class="container">
+            <a style="color: white;  width:10%; line-height: 60px; float: left;"  href="mainpagefaq.php">FAQ</a>
+            <p style="color: white;  width:10%; line-height: 60px; float: right;">CypRIDE 2023</p>
+            <img  class="footerlogo" src="logo.png" style="float: right;">
+
+        </div>
+
+    </div>
+
+
       <!--Spinner-->
       <div id="spinner">
          <img src='ajax-loader.gif' width="64" height="64" />
          <br>Loading..
       </div>
+      
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

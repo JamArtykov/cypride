@@ -36,7 +36,7 @@ if($count == 1){
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="styling.css" rel="stylesheet">
+    <link href="styling.css?v=<?php echo time(); ?>" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
       <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA_6tTKWvu8rFKXruzKisNnFJSrAVsuqxE"></script>
       <style>
@@ -152,47 +152,13 @@ if($count == 1){
   </head>
   <body>
     <!--Navigation Bar-->  
-      <nav role="navigation" class="navbar navbar-custom navbar-fixed-top">
-      
-          <div class="container-fluid">
-            
-              <div class="navbar-header">
-              
-                  <a class="navbar-brand">CYPRIDE</a>
-                  <button type="button" class="navbar-toggle" data-target="#navbarCollapse" data-toggle="collapse">
-                      <span class="sr-only">Toggle navigation</span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                  
-                  </button>
-              </div>
-              <div class="navbar-collapse collapse" id="navbarCollapse">
-                  <ul class="nav navbar-nav">
-                    <li><a href="index.php">Search</a></li>  
-                    <li><a href="profile.php">Profile</a></li>
-                      <li class="active"><a href="#">My Trips</a></li>
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right">
-                      <li><a href="#">
-                    <?php
-                        if(empty($picture)){
-                            echo "<div class='image_preview'><img class='previewing2' src='profilepicture/noimage.jpg' /></div>";
-                        }else{
-                            echo "<div class='image_preview'><img class='previewing2' src='$picture' /></div>";
-                        }
-
-                      ?>
-                  </a>
-              </li>
-              <li><a href="#"><b><?php echo $username?></b></a></li>
-                    <li><a href="index.php?logout=1">Log out</a></li>
-                  </ul>
-              
-              </div>
-          </div>
-      
-      </nav>
+    <?php
+    if(isset($_SESSION["user_id"])){
+        include("navigationbarconnected.php");
+    }else{
+        include("navigationbarnotconnected.php");
+    }  
+    ?>
     
 <!--Container-->
       <div class="container" id="container">
@@ -227,7 +193,7 @@ if($count == 1){
               <div class="modal-body">
                   
                   <!--Error message from PHP file-->
-                  <div id="result"></div>
+                  <div id="result5"></div>
                   
                   <!--Google Map-->
                   <div id="googleMap"></div>

@@ -174,6 +174,8 @@ $("#searchform").submit(function(event){
 
     }
 
+    
+
     function submitSearchTripRequest(){
         console.log(data);
         $.ajax({
@@ -183,14 +185,13 @@ $("#searchform").submit(function(event){
             success: function(data2){
                 console.log(data);
                 if(data2){
-                    $('#results').html(data2);
-                    //accordion
-                    $("#message").accordion({
-                        icons: false,
-                        active:false,
-                        collapsible: true,
-                        heightStyle: "content"   
-                    });
+                    $('#results').html(data2);                                      
+                    // $('#message h4').on('click', function(){
+                    //     // Get trip_id from data attribute
+                    //     var trip_id = $(this).data('trip_id');
+                    //     // Navigate to trips.php?id=trip_id
+                    //     window.location.href = 'trips.php?id=' + trip_id;
+                    // });
                 }
                 $("#spinner").css("display", "none");
                 $("#results").fadeIn();
@@ -205,7 +206,27 @@ $("#searchform").submit(function(event){
 
     }
 
+    const trip_id = document.getElementById('trip-details').getAttribute('data-trip-id');
+    const user_id = document.getElementById('trip-details').getAttribute('data-passenger-id');
 
-
+    $(document).ready(function() {
+        $('#add-passenger-btn').click(function() {
+          $.ajax({
+            url: 'createnote.php',
+            type: 'post',
+            data: {
+              trip_id: trip_id,
+              passenger_id: user_id
+            },
+            success: function(response) {
+              alert('Passenger added successfully!');
+              location.reload();
+            },
+            error: function() {
+              alert('Error adding passenger!');
+            }
+          });
+        });
+      });
 
 

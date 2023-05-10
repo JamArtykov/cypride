@@ -1,13 +1,20 @@
 <?php
-session_start();
-include('connection.php');
+    if(isset($_SESSION["user_id"])){
+        include("navigationbarconnected.php");
+    }else{
+        include("navigationbarnotconnected.php");
+    }
+
+    session_start();
+    include('connection.php');
 
 //logout
-include('logout.php');
+    include('logout.php');
 
 //remember me
-include('remember.php');
-?>
+    include('remember.php');
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,25 +23,26 @@ include('remember.php');
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cypride</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="styling.css?v=<?php echo time(); ?>" rel="stylesheet">
+      <link href="styling.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/sunny/jquery-ui.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
       <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA_6tTKWvu8rFKXruzKisNnFJSrAVsuqxE"></script>
+
       <style>
           /*margin top for myContainer*/
           #myContainer {
-              margin-top: 90px;
+              margin-top: 50px;
               text-align: center;
               color: black;
           }
-          
+
           /*header size*/
           #myContainer h1{
               font-size: 5em;
           }
-          
+
           .bold{
               font-weight: bold;
           }
@@ -59,58 +67,58 @@ include('remember.php');
               z-index: 1100;
           }
           #results{
-            margin-bottom: 100px;   
+              margin-bottom: 100px;
           }
           .driver{
-            font-size:1.5em;
-            text-transform:capitalize;
-            text-align: center;
+              font-size:1.5em;
+              text-transform:capitalize;
+              text-align: center;
           }
           .price{
-            font-size:1.5em;
+              font-size:1.5em;
           }
           .departure, .destination{
-            font-size:1.5em;
+              font-size:1.5em;
           }
           .perseat{
-            font-size:0.5em;
+              font-size:0.5em;
           }
           .journey{
-            text-align:left; 
+              text-align:left;
           }
           .journey2{
-            text-align:right; 
+              text-align:right;
           }
           .time{
-            margin-top:10px;  
+              margin-top:10px;
           }
           .telephone{
-            margin-top:10px;
+              margin-top:10px;
           }
           .seatsavailable{
-            font-size:0.7em; 
-            margin-top:5px;
+              font-size:0.7em;
+              margin-top:5px;
           }
           .moreinfo{
-            text-align:left; 
+              text-align:left;
           }
           .aboutme{
-            border-top:1px solid grey;
-            margin-top:15px;
-            padding-top:5px;
+              border-top:1px solid grey;
+              margin-top:15px;
+              padding-top:5px;
           }
           #message{
-            margin-top:20px;
+              margin-top:20px;
           }
           .journeysummary{
-            text-align:left; 
-            font-size:1.5em;
+              text-align:left;
+              font-size:1.5em;
           }
           .noresults{
-            text-align:center;  
-            font-size:1.5em;
+              text-align:center;
+              font-size:1.5em;
           }
-          
+
           .previewing{
               max-width: 100%;
               height: auto;
@@ -122,98 +130,71 @@ include('remember.php');
               border-radius: 50%;
           }
 
+          .modal-dialog {
+              width: 600px;
+              margin: 90px auto;
+          }
+          /*  Seyit footer için yazdığım kodlar */
           .footerlogo{
               height: 60px;
           }
-          
-          .modal-dialog {
-            width: 100%;
-            max-width: 600px;
-            margin: 10% auto;
-        }
 
-        @media only screen and (max-width: 768px) {
-            .modal-dialog {
-            margin: 20px;
-            }
-        }
-
-          .slogan{
-              font-family: "Century751 No2 BT";
-              color: aliceblue;
-          }
-
-          .results-container {
-            background-color: white;
-          }
-
-          
-      
       </style>
+
   </head>
   <body>
-    <!--Navigation Bar-->  
+    <!--Navigation Bar-->
     <?php
     if(isset($_SESSION["user_id"])){
         include("navigationbarconnected.php");
     }else{
         include("navigationbarnotconnected.php");
-    }  
+    }
     ?>
 
 
+    <div class="container-fluid" id="myContainer">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
 
+                <!--Search Form-->
+                <form class="form-inline" method="get" id="searchform">
+                    <div class="form-group">
+                        <label class="sr-only" for="departure">Departure:</label>
+                        <input type="text" class="form-control" id="departure" placeholder="Departure" name="departure">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only"></label>
+                        <input type="text" class="form-control" id="destination" placeholder="Destination" name="destination">
+                    </div>
+                    <input type="submit" value="Search" class="btn btn-lg green" name="search">
 
+                </form>
+                <!--Search Form End-->
 
-      <div class="container-fluid" id="myContainer">
-          <div class="row">
-              <div class="col-md-6 col-md-offset-3">
-                  <div class="slogan" id="slogan">
-                      <div class="row">
-                          <p class="text1slogan" style="font-size:40px">Share a ride, reduce your carbon footprint</p>
-<!--                          <p class="text1slogan" style="font-size:50px">Join the ride-sharing community</p>-->
-                          <p class="text1slogan" style="font-size:50px">Ride-sharing made easy</p>
-                      </div>
+                <!--Google Map-->
+                <div id="googleMap"></div>
 
-
-                  </div>
-                  <!--Search Form-->
-                  <form class="form-inline" method="get" id="searchform">
-                      <div class="form-group">
-                          <label class="sr-only" for="departure">Departure:</label>
-                          <input type="text" class="form-control" id="departure" placeholder="Departure" name="departure">
-                      </div>
-                      <div class="form-group">
-                          <label class="sr-only"></label>
-                          <input type="text" class="form-control" id="destination" placeholder="Destination" name="destination">
-                      </div>
-                      <input type="submit" value="Search" class="btn btn-lg green" name="search">
-                  
-                  </form>
-                  <!--Search Form End-->
-                  
-                  <!--Google Map-->
-                  <div id="googleMap"></div>
-                  
-                  <!--Sign up button-->
-                  <?php
-                  if(!isset($_SESSION["user_id"])){
-                      echo '<button type="button" class="btn btn-lg green signup" data-toggle="modal" data-target="#signupModal">Sign up-It\'s free</button>';
-                  }
-                  ?>
-                  <div id="results">
+                <!--Sign up button-->
+                <?php
+                if(!isset($_SESSION["user_id"])){
+                    echo '<button type="button" class="btn btn-lg green signup" data-toggle="modal" data-target="#signupModal">Sign up-It\'s free</button>';
+                }
+                ?>
+                <div id="results">
                     <!--will be filled with Ajax Call-->
                 </div>
-              
-              </div>
-          
-          </div>
-      
-      </div>
 
-    <!--Login form--> 
-    
-    
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!--Login form-->
+
+    <!-- Login form is clipping behind navbar, how to solve -->
       <form method="post" id="loginform">
         <div class="modal" id="loginModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" padding-top="200px">
@@ -223,14 +204,14 @@ include('remember.php');
                     &times;
                   </button>
                   <h4 id="myModalLabel">
-                    Login: 
+                    Login:
                   </h4>
               </div>
               <div class="modal-body">
-                  
+
                   <!--Login message from PHP file-->
                   <div id="loginmessage"></div>
-                  
+
 
                   <div class="form-group">
                       <label for="loginemail" class="sr-only">Email:</label>
@@ -249,7 +230,7 @@ include('remember.php');
                       Forgot Password?
                       </a>
                   </div>
-                  
+
               </div>
               <div class="modal-footer">
                   <input class="btn green" name="login" type="submit" value="Login">
@@ -258,17 +239,17 @@ include('remember.php');
                 </button>
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal" data-target="signupModal" data-toggle="modal">
                   Register
-                </button>  
+                </button>
               </div>
           </div>
       </div>
       </div>
-      
+
       </form>
 
-      
 
-    <!--Sign up form--> 
+
+    <!--Sign up form-->
       <form method="post" id="signupform">
         <div class="modal" id="signupModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -278,14 +259,14 @@ include('remember.php');
                     &times;
                   </button>
                   <h4 id="myModalLabel">
-                    Sign up today and Start using our Online Notes App! 
+                    Sign up today and Start using our Online Notes App!
                   </h4>
               </div>
               <div class="modal-body">
-                  
+
                   <!--Sign up message from PHP file-->
                   <div id="signupmessage"></div>
-                  
+
                   <div class="form-group">
                       <label for="username" class="sr-only">Username:</label>
                       <input class="form-control" type="text" name="username" id="username" placeholder="Username" maxlength="30">
@@ -344,14 +325,14 @@ include('remember.php');
                     &times;
                   </button>
                   <h4 id="myModalLabel">
-                    Forgot Password? Enter your email address: 
+                    Forgot Password? Enter your email address:
                   </h4>
               </div>
               <div class="modal-body">
-                  
+
                   <!--forgot password message from PHP file-->
                   <div id="forgotpasswordmessage"></div>
-                  
+
 
                   <div class="form-group">
                       <label for="forgotemail" class="sr-only">Email:</label>
@@ -365,35 +346,30 @@ include('remember.php');
                 </button>
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal" data-target="signupModal" data-toggle="modal">
                   Register
-                </button>  
+                </button>
               </div>
           </div>
       </div>
       </div>
       </form>
     <!-- Footer-->
-    <div class="footer" style="background-color: rgba(255,107,1,0.57)">
+      <div class="footer">
+          <div class="container">
+              <img class="footerlogo" src="logo.png" style="float: left;">
+              <p style="width:10%; line-height: 55px;">asdasjd</p>
+          </div>
 
+      </div>
 
-
-        <div class="container">
-            <a style="color: white;  width:10%; line-height: 60px; float: left;"  href="mainpagefaq.php">FAQ</a>
-            <p style="color: white;  width:10%; line-height: 60px; float: right;">CypRIDE 2023</p>
-            <img  class="footerlogo" src="logo.png" style="float: right;">
-
-        </div>
-
-    </div>
-      
       <!--Spinner-->
       <div id="spinner">
          <img src='ajax-loader.gif' width="64" height="64" />
          <br>Loading..
       </div>
-      
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="map.js"></script>  
+    <script src="map.js"></script>
     <script src="javascript.js"></script>
   </body>
 </html>

@@ -1,13 +1,11 @@
 <?php
-session_start();
-include('connection.php');
+    if(isset($_SESSION["user_id"])){
+        include("navigationbarconnected.php");
+    }else{
+        include("navigationbarnotconnected.php");
+    }  
+    ?>
 
-//logout
-include('logout.php');
-
-//remember me
-include('remember.php');
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,7 +14,7 @@ include('remember.php');
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cypride</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="styling.css?v=<?php echo time(); ?>" rel="stylesheet">
+      <link href="styling.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/sunny/jquery-ui.css">
@@ -25,7 +23,7 @@ include('remember.php');
       <style>
           /*margin top for myContainer*/
           #myContainer {
-              margin-top: 90px;
+              margin-top: 50px;
               text-align: center;
               color: black;
           }
@@ -121,33 +119,11 @@ include('remember.php');
               height: 20px;
               border-radius: 50%;
           }
-
-          .footerlogo{
-              height: 60px;
-          }
           
           .modal-dialog {
-            width: 100%;
-            max-width: 600px;
-            margin: 10% auto;
-        }
-
-        @media only screen and (max-width: 768px) {
-            .modal-dialog {
-            margin: 20px;
-            }
-        }
-
-          .slogan{
-              font-family: "Century751 No2 BT";
-              color: aliceblue;
-          }
-
-          .results-container {
-            background-color: white;
-          }
-
-          
+    width: 600px;
+    margin: 90px auto;
+}
       
       </style>
   </head>
@@ -160,60 +136,12 @@ include('remember.php');
         include("navigationbarnotconnected.php");
     }  
     ?>
-
-
-
-
-
-      <div class="container-fluid" id="myContainer">
-          <div class="row">
-              <div class="col-md-6 col-md-offset-3">
-                  <div class="slogan" id="slogan">
-                      <div class="row">
-                          <p class="text1slogan" style="font-size:40px">Share a ride, reduce your carbon footprint</p>
-<!--                          <p class="text1slogan" style="font-size:50px">Join the ride-sharing community</p>-->
-                          <p class="text1slogan" style="font-size:50px">Ride-sharing made easy</p>
-                      </div>
-
-
-                  </div>
-                  <!--Search Form-->
-                  <form class="form-inline" method="get" id="searchform">
-                      <div class="form-group">
-                          <label class="sr-only" for="departure">Departure:</label>
-                          <input type="text" class="form-control" id="departure" placeholder="Departure" name="departure">
-                      </div>
-                      <div class="form-group">
-                          <label class="sr-only"></label>
-                          <input type="text" class="form-control" id="destination" placeholder="Destination" name="destination">
-                      </div>
-                      <input type="submit" value="Search" class="btn btn-lg green" name="search">
-                  
-                  </form>
-                  <!--Search Form End-->
-                  
-                  <!--Google Map-->
-                  <div id="googleMap"></div>
-                  
-                  <!--Sign up button-->
-                  <?php
-                  if(!isset($_SESSION["user_id"])){
-                      echo '<button type="button" class="btn btn-lg green signup" data-toggle="modal" data-target="#signupModal">Sign up-It\'s free</button>';
-                  }
-                  ?>
-                  <div id="results">
-                    <!--will be filled with Ajax Call-->
-                </div>
-              
-              </div>
-          
-          </div>
+    
       
-      </div>
 
     <!--Login form--> 
     
-    
+    <!-- Login form is clipping behind navbar, how to solve -->
       <form method="post" id="loginform">
         <div class="modal" id="loginModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" padding-top="200px">
@@ -372,18 +300,11 @@ include('remember.php');
       </div>
       </form>
     <!-- Footer-->
-    <div class="footer" style="background-color: rgba(255,107,1,0.57)">
-
-
-
-        <div class="container">
-            <a style="color: white;  width:10%; line-height: 60px; float: left;"  href="mainpagefaq.php">FAQ</a>
-            <p style="color: white;  width:10%; line-height: 60px; float: right;">CypRIDE 2023</p>
-            <img  class="footerlogo" src="logo.png" style="float: right;">
-
-        </div>
-
-    </div>
+      <div class="footer">
+          <div class="container">
+              <p>               </p>
+          </div>
+      </div>
       
       <!--Spinner-->
       <div id="spinner">

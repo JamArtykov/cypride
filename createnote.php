@@ -1,18 +1,19 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+  header('location: index.php');
+}
 include('connection.php');
 
-//get user_id
-$user_id = $_SESSION['user_id'];
-//get the current time
-$time = time();
-//run a query to create new note
-$sql = "INSERT INTO notes (`user_id`, `note`, `time`) VALUES ($user_id, '', '$time')";
+$trip_id = $_POST['trip_id'];
+$passenger_id = $_POST['passenger_id'];
+
+$sql = "INSERT INTO `trip_participants` (trip_id, user_id, is_driver) VALUES ('$trip_id', '$passenger_id', 0)";
 $result = mysqli_query($link, $sql);
-if(!$result){
-    echo 'error';
-}else{
-    //mysqli_insert_id returns the auto generated id used in the last query
-    echo mysqli_insert_id($link);   
+
+if ($result) {
+  echo 'success';
+} else {
+  echo 'error';
 }
 ?>

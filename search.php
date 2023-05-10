@@ -1,7 +1,9 @@
+
 <?php
 //start session and connect to database
 session_start();
 include('connection.php');
+
 
 //define error messages
 $missingdeparture = '<p><strong>Please enter your departure!</strong></p>';
@@ -134,10 +136,11 @@ echo "<div class='alert alert-info journeysummary'>From $departure to $destinati
 echo '<div id="message">'; 
 
 //cycle through trips and find close ones
-
 //retrieve each row in $result
+
 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-    
+    $trip_id = $row['trip_id'];
+
     //check if the trip date is in the past
     $dateOK = 1;
     if($row['regular']=="N"){
@@ -212,7 +215,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             
             //print trip
             echo 
-             "<h4 class='row'>
+             "
+             <div class='results-container'>
+             <h4 class='row'>
+                <a href='viewtrip.php?trip_id=$trip_id' class='btn btn-primary btn-lg active' role='button' aria-pressed='true'>View Trip</a>
                 <div class='col-sm-2 journey'>
                     <div class='driver'>$firstname
                     </div>
@@ -252,49 +258,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                         $seatsAvailable left
                     </div>
                 </div>
-            </h4>";
-            
-            echo 
-            "<div class='moreinfo'>
-                <div>
-                    <div>
-                        Gender: $gender
-                    </div>
-                    <div class='telephone'>
-                        &#9742: $phonenumber
-                    </div>
-                </div>
-                <div class='aboutme'> 
-                    About me: $moreInformation
-                </div>
+            </h4>
             </div>";
         }
     }
 }
 echo "</div>";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

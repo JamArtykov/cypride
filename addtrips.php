@@ -116,13 +116,23 @@ if($errors){
         $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$monday','$tuesday','$wednesday','$thursday','$friday','$saturday','$sunday','$time')";
     }else{ 
         //query for a one off trip
+        
         $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `date`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$date','$time')";   
     }
+    
     $results = mysqli_query($link, $sql);
     //check if query is successful
     if(!$results){
         echo '<div class=" alert alert-danger">There was an error! The trip could not be added to database!</div>';        
     }
+    $trip_id = mysqli_insert_id($link);
+    echo $trip_id;
+    $sql2 = "INSERT INTO `trip_participants` (`trip_id`, `user_id`, `is_driver`) VALUES ('".$trip_id."', '".$_SESSION['user_id']."', '1')";
+    $result2 = mysqli_query($link, $sql2);
+    if(!$result2){
+    echo '<div class=" alert alert-danger">There was an error! The trip could not be added to trip_participants</div>';        
+}
+
 }
 
 ?>
