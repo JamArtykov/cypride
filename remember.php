@@ -1,5 +1,6 @@
 <?php
 session_start();
+include('connection.php');
 //If the user is not logged in & rememberme cookie exists
 if(!isset($_SESSION['user_id']) && !empty($_COOKIE['rememberme'])){
            //array_key_exists('user_id', $_SESSION)
@@ -20,6 +21,9 @@ if(!isset($_SESSION['user_id']) && !empty($_COOKIE['rememberme'])){
     }
     $count = mysqli_num_rows($result);
     if($count !== 1){
+        echo '<div class="alert alert-danger">'.$f2authentificator2.'</div>';
+        echo '<div class="alert alert-danger">'.$authentificator1.'</div>';
+        echo '<div class="alert alert-danger">'.$count.'</div>';
         echo '<div class="alert alert-danger">Remember me process failed!</div>';
         exit;
     }

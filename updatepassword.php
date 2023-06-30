@@ -27,7 +27,7 @@ if(empty($_POST["currentpassword"])){
     if($count !== 1){
         echo '<div class="alert alert-danger">There was a problem running the query</div>';
     }else{
-        $row = mysqli_fetch_array($result, MYSQL_ASSOC);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($currentPassword != $row['password']){
             $errors .= $incorrectCurrentPassword;
         }

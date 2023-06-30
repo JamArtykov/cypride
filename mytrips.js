@@ -77,6 +77,7 @@ $(function(){
                 }
             
         });
+        console.log(data);
         
         //setup delete button for AJAX Call
         $('#deletetrip').click(function(){
@@ -172,10 +173,10 @@ $(function(){
             success: function(data2){
                 console.log(data);
                 if(data2){
-                    $('#addtripModal').modal('hide');
                     $('#result5').html(data2);
                     $("#spinner").css("display", "none");
                     $("#result").slideDown();
+                    $('#addtripModal').modal('hide');
                     location.reload();
                 }else{
                     getTrips();
@@ -185,36 +186,53 @@ $(function(){
                     //empty form
                     $('#addtripform')[0].reset();
                 }
+                addtripModal.find('form')[0].reset();
+                addtripModal.modal('hide');
                 
-        },
+            },
             error: function(){
                 $("#result").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
                 $("#spinner").css("display", "none");
-                $("#result").fadeIn();
+                
 
-    }
+            }
         }); 
-
     }
 
-    function getTrips(){
+    // function getTrips(){
+    //     $("#spinner").css("display", "block");
+    //     $.ajax({
+    //         url: "gettrips.php",
+    //         success: function(data2){
+    //             $("#spinner").css("display", "none");
+    //             $('#mytrips').html(data2);
+    //             $('#mytrips').hide();
+    //             $('#mytrips').fadeIn();
+    //     },
+    //         error: function(){
+    //             $("#spinner").css("display", "none");
+    //             $('#mytrips').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+    //             $('#mytrips').hide();
+    //             $('#mytrips').fadeIn();
+    // }
+    //     }); 
+    // }
+    function getTrips() {
         $("#spinner").css("display", "block");
         $.ajax({
             url: "gettrips.php",
-            success: function(data2){
+            success: function(data) {
                 $("#spinner").css("display", "none");
-                $('#mytrips').html(data2);
+                $('#mytrips').html(data);
                 $('#mytrips').hide();
-                $('#mytrips').fadeIn();
-        },
-            error: function(){
-                $("#spinner").css("display", "none");
-                $('#mytrips').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
-                $('#mytrips').hide();
-                $('#mytrips').fadeIn();
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("Ajax request error:", textStatus, errorThrown);
+            }
+        });
     }
-        }); 
-    }
+    
     
     function formatModal(){
         $('#departure2').val(trip["departure"]);    

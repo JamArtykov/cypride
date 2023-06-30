@@ -2,6 +2,37 @@
 var geocoder = new google.maps.Geocoder();
 var data;
 
+//Ajax call for the update car form
+$(document).ready(function() {
+    // Handle form submission
+    $('#editcarform').submit(function(e) {
+      e.preventDefault(); // Prevent the form from submitting normally
+  
+      // Get the form data
+      var formData = new FormData(this);
+  
+      // Send the form data using AJAX
+      $.ajax({
+        url: 'updatecar.php', 
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+          // Display the response message
+          $('#result3').html(response);
+        },
+        error: function(xhr, status, error) {
+          // Handle the error
+          console.log(xhr.responseText);
+        }
+      });
+      return false;
+    });
+  });
+  
+
+
 //Ajax Call for the sign up form 
 //Once the form is submitted
 $("#signupform").submit(function(event){
@@ -60,7 +91,7 @@ $("#loginform").submit(function(event){
         data: datatopost,
         success: function(data){
             if(data == "success"){
-                window.location = "mainpageloggedin.php";
+                window.location = "index.php";
             }else{
                 $('#loginmessage').html(data);   
                 //hide spinner
@@ -126,7 +157,7 @@ $("#searchform").submit(function(event){
     event.preventDefault();
     data = $(this).serializeArray();
     console.log(data);
-    
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
     
     getSearchTripDepartureCoordinates();
     
@@ -185,13 +216,12 @@ $("#searchform").submit(function(event){
             success: function(data2){
                 console.log(data);
                 if(data2){
-                    $('#results').html(data2);                                      
-                    // $('#message h4').on('click', function(){
-                    //     // Get trip_id from data attribute
-                    //     var trip_id = $(this).data('trip_id');
-                    //     // Navigate to trips.php?id=trip_id
-                    //     window.location.href = 'trips.php?id=' + trip_id;
-                    // });
+                    $('#results').html(data2);    
+                    
+                    $('html, body').animate({
+                        scrollTop: $('#results').offset().top
+                      }, 800);
+                    
                 }
                 $("#spinner").css("display", "none");
                 $("#results").fadeIn();
@@ -206,27 +236,58 @@ $("#searchform").submit(function(event){
 
     }
 
-    const trip_id = document.getElementById('trip-details').getAttribute('data-trip-id');
-    const user_id = document.getElementById('trip-details').getAttribute('data-passenger-id');
-
     $(document).ready(function() {
+        const trip_id = document.getElementById('trip-details').getAttribute('data-trip-id');
+        const user_id = document.getElementById('trip-details').getAttribute('data-passenger-id');
+        const driver_id = document.getElementById('trip-details').getAttribute('data-driver-id');
+
+    
         $('#add-passenger-btn').click(function() {
-          $.ajax({
-            url: 'createnote.php',
-            type: 'post',
-            data: {
-              trip_id: trip_id,
-              passenger_id: user_id
-            },
-            success: function(response) {
-              alert('Passenger added successfully!');
-              location.reload();
-            },
-            error: function() {
-              alert('Error adding passenger!');
-            }
-          });
+            console.log(driver_id);
+            $.ajax({
+                url: 'createnote.php',
+                type: 'post',
+                data: {
+                    trip_id: trip_id,
+                    passenger_id: user_id,
+                    driver_id: driver_id
+                },
+                success: function(response) {
+                    alert('Passenger added successfully!');
+                    location.reload();
+                },
+                error: function() {
+                    alert('Error adding passenger!');
+                }
+            });
         });
-      });
+    
+        $('#leave-passenger-btn').click(function() {
+            console.log('Leave button clicked!');
+            var tripId = $('#trip-details').data('trip-id');
+            var passengerId = $('#trip-details').data('passenger-id');
+            var driverId = $('#trip-details').data('driver-id');
+    
+            $.ajax({
+                url: 'deletenote.php',
+                type: 'post',
+                data: {
+                    trip_id: tripId,
+                    passenger_id: passengerId,
+                    driver_id: driverId
+                },
+                success: function(response) {
+                    alert('You left the trip successfully!');
+                    location.reload();
+                },
+                error1: function() {
+                    alert('Error leaving the trip1!');
+                }     
+            });
+        });
+    });   
+    
+
+      
 
 

@@ -9,7 +9,7 @@ html {
     background-repeat: no-repeat;
     background-attachment: static;
     background-size: cover;
-    background-color: darkslategrey;
+    background: linear-gradient(to bottom, #1a62d6, #003366);
   }
   
   /* Style Jumbotron */

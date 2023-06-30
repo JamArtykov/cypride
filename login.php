@@ -40,7 +40,7 @@ if(!$result){
         //If email & password don't match print error
 $count = mysqli_num_rows($result);
 if($count !== 1){
-    echo '<div class="alert alert-danger">Wrong Username or Password</div>';
+    echo '<div class="alert alert-danger">Wrong Username and Password, or Account Has not been Activated</div>';
 }
 else {
     //log the user in: Set session variables

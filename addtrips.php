@@ -12,8 +12,8 @@ $missingprice = '<p><strong>Please choose a price per seat!</strong></p>';
 $invalidprice = '<p><strong>Please choose a valid price per seat using numbers only!!</strong></p>';
 $missingseatsavailable = '<p><strong>Please select the number of available seats!</strong></p>';
 $invalidseatsavailable = '<p><strong>The number of available seats should contain digits only!</strong></p>';
-$missingfrequency = '<p><strong>Please select a frequency!</strong></p>';
-$missingdays = '<p><strong>Please select at least one weekday!</strong></p>';
+
+
 $missingdate = '<p><strong>Please choose a date for your trip!</strong></p>';
 $missingtime = '<p><strong>Please choose a time for your trip!</strong></p>';
 
@@ -83,24 +83,6 @@ if(!$seatsavailable){
     $seatsavailable = filter_var($seatsavailable, FILTER_SANITIZE_STRING);    
 }
 
-//Check regular
-if(!$regular){
-    $errors .= $missingfrequency;    
-}elseif($regular == "Y"){
-    if(!$monday && !$tuesday && !$wednesday && !$thursday && !$friday && !$saturday && !$sunday ){
-        $errors .= $missingdays; 
-    }
-    if(!$time){
-        $errors .= $missingtime;   
-    }
-}elseif($regular == "N"){
-    if(!$date){
-        $errors.= $missingdate;   
-    }
-    if(!$time){
-        $errors .= $missingtime;   
-    }
-}
 
 //if there is an error print error message
 if($errors){
@@ -111,14 +93,9 @@ if($errors){
     $tbl_name = 'carsharetrips';
     $departure = mysqli_real_escape_string($link, $departure);
     $destination = mysqli_real_escape_string($link, $destination);
-    if($regular == "Y"){
-        //query for a regular trip
-        $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$monday','$tuesday','$wednesday','$thursday','$friday','$saturday','$sunday','$time')";
-    }else{ 
-        //query for a one off trip
-        
-        $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `date`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$date','$time')";   
-    }
+
+    $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `date`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$date','$time')";   
+
     
     $results = mysqli_query($link, $sql);
     //check if query is successful
@@ -126,9 +103,12 @@ if($errors){
         echo '<div class=" alert alert-danger">There was an error! The trip could not be added to database!</div>';        
     }
     $trip_id = mysqli_insert_id($link);
-    echo $trip_id;
-    $sql2 = "INSERT INTO `trip_participants` (`trip_id`, `user_id`, `is_driver`) VALUES ('".$trip_id."', '".$_SESSION['user_id']."', '1')";
+    $sql2 = "INSERT INTO `trip_participants` (`trip_id`, `user_id`, `is_driver`, `payment_amount`) VALUES ('".$trip_id."', '".$_SESSION['user_id']."', '1', '0')";
     $result2 = mysqli_query($link, $sql2);
+    $sql3 = "INSERT INTO `chats` (`trip_id`, `chat_id`) VALUES ('".$trip_id."', '".$trip_id."')";
+    $result3 = mysqli_query($link,$sql3);
+    $sql_chat = "INSERT INTO `chat_participants` (`chat_id`, `user_id`) VALUES ('".$trip_id."', '".$passenger_id."')";
+    $result_chat = mysqli_query($link, $sql_chat);
     if(!$result2){
     echo '<div class=" alert alert-danger">There was an error! The trip could not be added to trip_participants</div>';        
 }

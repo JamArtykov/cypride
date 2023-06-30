@@ -139,18 +139,52 @@ $activationKey = bin2hex(openssl_random_pseudo_bytes(16));
 
 $sql = "INSERT INTO users (`username`, `email`, `password`, `activation`, `first_name`, `last_name`, `phonenumber`, `gender`, `moreinformation`) VALUES ('$username', '$email', '$password', '$activationKey', '$firstname', '$lastname', '$phonenumber', '$gender', '$moreinformation')";
 $result = mysqli_query($link, $sql);
-if(!$result){
-    echo '<div class="alert alert-danger">There was an error inserting the users details in the database!</div>'; 
+if (!$result) {
+    echo '<div class="alert alert-danger">There was an error inserting the user details in the database!</div>';
     exit;
 }
 
-//Send the user an email with a link to activate.php with their email and activation code
-$message = "Please click on this link to activate your account:\n\n";
-$message .= "cypride.host20.uk/activate.php?email=" . urlencode($email) . "&key=$activationKey";
-if(mail($email, 'Confirm your Registration', $message, 'From:'.'developmentisland@gmail.com')){
-       echo "<div class='alert alert-success'>Thank for your registring! A confirmation email has been sent to $email. Please click on the activation link to activate your account.</div>";
-       echo "<div class='alert alert-success'>$message</div>";
+// Retrieve the user_id
+$user_id = mysqli_insert_id($link);
 
+$sql_wallet = "INSERT INTO wallet (`user_id`, `balance`) VALUES ('$user_id', '0')";
+$result_wallet = mysqli_query($link, $sql_wallet);
+if (!$result_wallet) {
+    echo '<div class="alert alert-danger">There was an error inserting the wallet details in the database!</div>';
+    exit;
 }
+
+// SMTP configuration
+$recipientEmail = $email;
+
+// Message details
+$message = "Please click on this link to activate your account:\n\n";
+$message .= 'http://localhost/activate.php?email=' . urlencode($recipientEmail) . '&key=' . $activationKey;
+
+
+$subject = 'Confirm your Registration';
+
+require_once("class.phpmailer.php");
+$mail = new PHPMailer();
+$mail->IsSMTP();
+$mail->SetLanguage('en');
+$mail->Port = 587;
+$mail->Host = "gmail.google.com";
+$mail->SMTPAuth = true;
+$mail->Username = "login@gmail.com";
+$mail->Password = "password";
+$mail->From = "from@gmail.com";
+$mail->Fromname = "logo";
+$mail->AddAddress($recipientEmail,"Mail Sending");
+$mail->Subject = $subject;
+$mail->Body = $message;
+
+if ($mail->Send()) {
+    echo "<div class='alert alert-success'>Thank you for registering! A confirmation email has been sent to $recipientEmail. Please click on the activation link to activate your account.</div>";
+} else {
+    echo "<div class='alert alert-danger'>Error sending email. Please try again later.</div>";
+}
+
+
         
-        ?>
+?>

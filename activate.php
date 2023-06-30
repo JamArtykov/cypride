@@ -22,19 +22,118 @@ include('connection.php');
                 margin-top: 50px;
                 border-radius: 15px;
             }
+
+            body{
+                background-color: #0c4899;
+            }
         </style> 
 
     </head>
         <body>
-<div class="container-fluid">
+<!--Navigation bar-->
+        <nav>
+            <div class="navbar-left">
+                <a href="index.php">
+                    <img src="logo.png">
+                    <span class="navbar-text">CypRIDE</span>
+                </a>
+            </div>
+            <div class="navbar-right">
+
+            </div>
+
+            <style>
+                nav {
+                    position:fixed;
+                    top: 0px;
+                    width: 100%;
+                    z-index: 9999;
+                    background-color: #fff;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 80px;
+                    padding: 0 20px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
+
+                .navbar-left a {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                }
+
+                .navbar-left img {
+                    height: 40px;
+                    margin-right: 10px;
+                    margin-left: 50px;
+                }
+
+                .navbar-left .navbar-text {
+                    color: #3aa951;
+                    font-size: 24px;
+                }
+
+                .navbar-right .dropdown {
+                    position: relative;
+                }
+
+                .navbar-right .dropbtn {
+                    background-color: transparent;
+                    color: #3aa951;
+                    font-size: 18px;
+                    border: none;
+                    cursor: pointer;
+                    margin-right: 50px;
+                }
+
+                .navbar-right .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    z-index: 1;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    min-width: 120px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
+
+                .navbar-right .dropdown-content a {
+                    color: #3aa951;
+                    padding: 10px 20px;
+                    display: block;
+                    text-decoration: none;
+                    font-size: 16px;
+                }
+
+                .navbar-right .dropdown:hover .dropdown-content {
+                    display: block;
+                }
+
+                .navbar-fixed-top{
+                    position:fixed;
+                    top: 0px;
+                    width: 100%;
+                    z-index: 9999;
+
+                }
+
+            </style>
+        </nav>
+
+
+<div class="container-fluid" style="margin-top: 60px;">
     <div class="row">
-        <div class="col-sm-offset-1 col-sm-10 contactForm">
-            <h1>Account Activation</h1>
+        <div class="col-sm-offset-1 col-sm-10 contactForm" style="background: linear-gradient(to top, rgb(217,237,247),#ecf3fa,rgb(217,237,247));">
+            <h1><b>Account Activation</b></h1>
 <?php
 //If email or activation key is missing show an error
 if(!isset($_GET['email']) || !isset($_GET['key'])){
     echo '<div class="alert alert-danger">There was an error. Please click on the activation link you received by email.</div>'; exit;
 }
+
+
+
 //else
     //Store them in two variables
 $email = $_GET['email'];
@@ -48,9 +147,9 @@ $result = mysqli_query($link, $sql);
     //If query is successful, show success message and invite user to login
 if(mysqli_affected_rows($link) == 1){
     echo '<div class="alert alert-success">Your account has been activated.</div>';
-    echo '<a href="index.php" type="button" class="btn-lg btn-sucess">Log in<a/>';
+    echo '<a href="index.php" type="button" class="btn-lg btn-sucess" style="margin-bottom: 30px;"><b> Log in</b><a/>';
     
-    echo '<div class ="button">Login</div>';
+    echo '<div style="margin-bottom: 30px;"></div>';
     
 }else{
     //Show error message

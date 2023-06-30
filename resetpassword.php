@@ -16,6 +16,13 @@ include('connection.php');
         <title>Password Reset</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <style>
+            body{
+                background-color: #0c4899;
+            }
+
+            .container{
+                background: #0c4899;
+            }
             h1{
                 color:purple;   
             }
@@ -28,10 +35,101 @@ include('connection.php');
 
     </head>
         <body>
-<div class="container-fluid">
+
+        <nav>
+            <div class="navbar-left">
+                <a href="index.php">
+                    <img src="logo.png">
+                    <span class="navbar-text">CypRIDE</span>
+                </a>
+            </div>
+            <div class="navbar-right">
+
+            </div>
+
+            <style>
+                nav {
+                    position:fixed;
+                    top: 0px;
+                    width: 100%;
+                    z-index: 9999;
+                    background-color: #fff;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 80px;
+                    padding: 0 20px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
+
+                .navbar-left a {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                }
+
+                .navbar-left img {
+                    height: 40px;
+                    margin-right: 10px;
+                    margin-left: 50px;
+                }
+
+                .navbar-left .navbar-text {
+                    color: #3aa951;
+                    font-size: 24px;
+                }
+
+                .navbar-right .dropdown {
+                    position: relative;
+                }
+
+                .navbar-right .dropbtn {
+                    background-color: transparent;
+                    color: #3aa951;
+                    font-size: 18px;
+                    border: none;
+                    cursor: pointer;
+                    margin-right: 50px;
+                }
+
+                .navbar-right .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    z-index: 1;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    min-width: 120px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
+
+                .navbar-right .dropdown-content a {
+                    color: #3aa951;
+                    padding: 10px 20px;
+                    display: block;
+                    text-decoration: none;
+                    font-size: 16px;
+                }
+
+                .navbar-right .dropdown:hover .dropdown-content {
+                    display: block;
+                }
+
+                .navbar-fixed-top{
+                    position:fixed;
+                    top: 0px;
+                    width: 100%;
+                    z-index: 9999;
+
+                }
+
+            </style>
+        </nav>
+
+<div class="container-fluid" style="margin-top: 60px;">
     <div class="row">
-        <div class="col-sm-offset-1 col-sm-10 contactForm">
-            <h1>Reset Password:</h1>
+        <div class="col-sm-offset-1 col-sm-10 contactForm" style="background: linear-gradient(to top, rgb(217,237,247),#ecf3fa,rgb(217,237,247));">
+            <h1><b> Reset Password:</b></h1>
             <div id="resultmessage"></div>
 <?php
 //If user_id or key is missing
@@ -61,16 +159,16 @@ if($count !== 1){
 }
 //print reset password form with hidden user_id and key fields
 echo "
-<form method=post id='passwordreset'>
+<form method=post id='passwordreset' style='margin-bottom: 20px;'>
 <input type=hidden name=key value=$key>
 <input type=hidden name=user_id value=$user_id>
 <div class='form-group'>
     <label for='password'>Enter your new Password:</label>
-    <input type='password' name='password' id='password' placeholder='Enter Password' class='form-control'>
+    <input type='password' name='password' id='password' placeholder='Enter Password' class='form-control' style='border: 1px solid #000; border-radius: 9px;  padding: 5px;'>
 </div>
 <div class='form-group'>
     <label for='password2'>Re-enter Password::</label>
-    <input type='password' name='password2' id='password2' placeholder='Re-enter Password' class='form-control'>
+    <input type='password' name='password2' id='password2' placeholder='Re-enter Password' class='form-control' style='border: 1px solid #000; border-radius: 9px;  padding: 5px;'>
 </div>
 <input type='submit' name='resetpassword' class='btn btn-success btn-lg' value='Reset Password'>
 
@@ -84,6 +182,10 @@ echo "
         </div>
     </div>
 </div>
+
+        
+
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
             <!--Script for Ajax Call to storeresetpassword.php which processes form data-->
@@ -114,6 +216,11 @@ echo "
             });           
             
             </script>
+
+        <!-- Footer-->
+        <?php
+        include("footer.php");
+        ?>
         </body>
 </html>
 <?php ob_flush(); ?>

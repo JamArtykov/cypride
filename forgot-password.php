@@ -61,11 +61,30 @@ if(!$result){
             //Send email with link to resetpassword.php with user id and activation code
 
 $message = "Please click on this link to reset your password:\n\n";
-$message .= "http://carsharingwebsitefinal.thecompletewebhosting.com/resetpassword.php?user_id=$user_id&key=$key";
-if(mail($email, 'Reset your password', $message, 'From:'.'developmentisland@gmail.com')){
-        //If email sent successfully
-                //print success message
-       echo "<div class='alert alert-success'>An email has been sent to $email. Please click on the link to reset your password.</div>";
+$message .= "http://localhost/resetpassword.php?user_id=$user_id&key=$key";
+$subject = 'Reset Your Password';
+
+require_once("class.phpmailer.php");
+$mail = new PHPMailer();
+$mail->IsSMTP();
+$mail->SetLanguage('en');
+$mail->Port = 587;
+$mail->Host = "gmail.google.com";
+$mail->SMTPAuth = true;
+$mail->Username = "login@gmail.com";
+$mail->Password = "password";
+$mail->From = "from@gmail.com";
+$mail->Fromname = "logo";
+$mail->AddAddress($recipientEmail,"Mail Sending");
+$mail->Subject = $subject;
+$mail->Body = $message;
+
+if ($mail->Send()) {
+    echo "<div class='alert alert-success'>A reset email has been sent to $email. Please click on the reset link to reset your account.</div>";
+} else {
+    echo "<div class='alert alert-danger'>Error sending email. Please try again later.</div>";
 }
+
+
 
     ?>

@@ -1,30 +1,104 @@
-// Ajax call to updateusername.php
-$("#updateusernameform").submit(function(event){ 
-    //prevent default php processing
-    event.preventDefault();
-    //collect user inputs
-    var datatopost = $(this).serializeArray();
-//    console.log(datatopost);
-    //send them to updateusername.php using AJAX
-    $.ajax({
-        url: "updateusername.php",
-        type: "POST",
-        data: datatopost,
-        success: function(data){
-            if(data){
-                $("#updateusernamemessage").html(data);
-            }else{
-                location.reload();   
-            }
-        },
-        error: function(){
-            $("#updateusernamemessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
-            
-        }
-    
-    });
+$(document).ready(function() {
+    // AJAX call to update profile information
+    $("#updateprofileform").submit(function(event) {
+        
+        // Prevent default form processing
+        event.preventDefault();
 
+        // Collect user inputs
+        var datatopost = $(this).serializeArray();
+        console.log(datatopost);
+        // Send the data to updateprofile.php using AJAX
+        $.ajax({
+            url: "updateusername.php",
+            type: "POST",
+            data: datatopost,
+            success: function(data) {
+                if (data) {
+                    $("#updateprofilemessage").html(data);
+                } else {
+                    location.reload();
+                }
+            },
+            error: function() {
+                $("#updateprofilemessage").html("<div class='alert alert-danger'>There was an error with the AJAX call. Please try again later.</div>");
+            }
+        });
+    });
 });
+
+$(document).ready(function() {
+    // AJAX call to add car data
+    $("#addcarform").submit(function(event) {
+        console.log("add car");
+
+
+        // Prevent default form processing
+        event.preventDefault();
+
+        // Create a FormData object to handle file uploads
+        var formData = new FormData(this);
+        // Send the data to addcar.php using AJAX
+        $.ajax({
+            url: "addcar.php",
+            type: "POST",
+            data: formData,
+            processData: false,  // Important: prevent jQuery from processing the data
+            contentType: false,  // Important: prevent jQuery from setting the content type
+            success: function(data) {
+                
+                if (data) {
+                    location.reload();
+                    $("#carFormResult").html(data); 
+                } else {
+
+                }
+            },
+            error: function() {
+                
+                $("#carFormResult").html("<div class='alert alert-danger'>There was an error with the AJAX call. Please try again later.</div>");
+            }
+        });
+
+        return false;
+    });
+});
+
+$(document).ready(function() {
+    // AJAX call to edit car data
+    $("#editcarform").submit(function(event) {
+        console.log("edit car");
+        event.preventDefault();
+        // Create a FormData object to handle file uploads
+        var formData = $(this).serializeArray();
+
+
+        $.ajax({
+            url: "updatecar.php",
+            type: "POST",
+            data: formData,
+            processData: false,  
+            contentType: false,  
+            success: function(data) {
+                if (data) {
+                    $("#result3").html(data); // Display success/error message from PHP file
+
+                } else {
+
+                }
+            },
+            error: function() {
+                $("#result3").html("<div class='alert alert-danger'>There was an error with the AJAX call. Please try again later.</div>");
+            }
+        });
+
+        return false;
+    });
+});
+
+
+
+
 
 // Ajax call to updatepassword.php
 $("#updatepasswordform").submit(function(event){ 
@@ -54,32 +128,32 @@ $("#updatepasswordform").submit(function(event){
 
 
 
-// Ajax call to updateemail.php
-$('#loading').hide();
-$("#updateemailform").submit(function(event){ 
-    //prevent default php processing
-    event.preventDefault();
-    //collect user inputs
-    var datatopost = $(this).serializeArray();
-//    console.log(datatopost);
-    //send them to updateusername.php using AJAX
-    $.ajax({
-        url: "updateemail.php",
-        type: "POST",
-        data: datatopost,
-        success: function(data){
-            if(data){
-                $("#updateemailmessage").html(data);
-            }
-        },
-        error: function(){
-            $("#updateemailmessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+// // Ajax call to updateemail.php
+// $('#loading').hide();
+// $("#updateemailform").submit(function(event){ 
+//     //prevent default php processing
+//     event.preventDefault();
+//     //collect user inputs
+//     var datatopost = $(this).serializeArray();
+// //    console.log(datatopost);
+//     //send them to updateusername.php using AJAX
+//     $.ajax({
+//         url: "updateemail.php",
+//         type: "POST",
+//         data: datatopost,
+//         success: function(data){
+//             if(data){
+//                 $("#updateemailmessage").html(data);
+//             }
+//         },
+//         error: function(){
+//             $("#updateemailmessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
             
-        }
+//         }
     
-    });
+//     });
 
-});
+// });
 
 
 
