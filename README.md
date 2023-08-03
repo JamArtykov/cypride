@@ -22,3 +22,8 @@ Get your Google Maps API key from `[Google Clouds](https://console.cloud.google.
 Update the placeholder {API_KEY} with your own key for maps to work.
 You can also change the map parameters(such as starting point, country and etc) in map.js/map2.js files
 
+## Recognised "Best Project" Award
+
+We have been awarded the "Certificate of Excellence" from the Computer Engineering Department of Eastern Mediterranean University with our Cypride Trip Sharing Application. We are very honoured and proud to receive such motivating feedback!
+
+![InkedIMG_20230721_195203_4_500x350](https://github.com/JamArtykov/cypride/assets/85450000/022b9362-1a95-4a9f-8592-90428c5297ab)
